@@ -50,9 +50,7 @@ faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontal
 while True:
     success, img = cap.read()
 
-    # Detect faces in the current frame
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+ 
 
     # This code block will resize the image captured and convert it to RGB
     imgS = cv2.resize(img, [0, 0], None, 0.25, 0.25)
@@ -64,12 +62,12 @@ while True:
 
     imgBackground[156:156 + 480, 47:47 + 640] = img
     imgBackground[156:156 + 480, 729:729 + 320] = imgModeList[modeType]
-
-    if len(faces) > 0:
-        # This code block extracts the encoded zip and compares
-        for encodeFace, faceLoc in zip(encodeCurFrame, faceCurFrame):
-            matches = face_recognition.compare_faces(encodeListKnown, encodeFace)
-            faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)
+    
+    # This code block extracts the encoded zip and compares
+     id_found = False
+     for encodeFace, faceLoc in zip(encodeCurFrame, faceCurFrame):
+        matches = face_recognition.compare_faces(encodeListKnown, encodeFace)
+        faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)
 
             matchIndex = np.argmin(faceDis)
 
@@ -82,8 +80,6 @@ while True:
                 id = studentIds[matchIndex]
 
                 if counter == 0:
-                    cvzone.putTextRect(imgBackground, "Loading", (275, 400))
-                    cv2.waitKey(1)
                     counter = 1
                     modeType = 1
 
